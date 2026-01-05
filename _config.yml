@@ -1,0 +1,50 @@
+title: PolluScan
+logo: "/assets/images/logo.png"
+favicon_ico: "/assets/images/favicon.ico"
+
+email: mikael@polluscan.ch
+description: >- # this means to ignore newlines until "baseurl:"
+  Developer Documentation
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://polluscan.ch" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: polluscan
+github_username:  polluscan
+
+nav_enabled: true
+color_scheme: dark
+
+callouts:
+  warning:
+    title: Attention
+    color: red
+
+# Footer last edited timestamp
+last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
+last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
+
+
+# Navigation
+nav_links:
+  - title: API
+    children:
+      - title: API Routes
+        href: /README/labApi/apiRoutes
+      - title: Authentication
+        href: /README/labApi/authentication
+      - title: Setup
+        href: /README/labApi/setup
+      - title: Routes
+        children:
+          - title: Add Analysis Results
+            href: /README/labApi/routes/addAnalysisResults
+          - title: Fetch Open Orders
+            href: /README/labApi/routes/fetchOpenOrders
+          - title: Update Order Status
+            href: /README/labApi/routes/updateOrderStatus
+          - title: Upload Analysis Report
+            href: /README/labApi/routes/uploadAnalysisReport
+
+# Build settings
+theme: just-the-docs
+plugins:
+  - jekyll-feed

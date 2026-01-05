@@ -1,11 +1,16 @@
-## Réception d'une nouvelle commande
+---
+title: Lister toutes les commandes ouvertes
+parent: Routes
+nav_order: 4
+---
 
-**`POST your_endpoint`**
+## Lister toutes les commandes ouvertes
 
-Cet endpoint est utilisé pour recevoir une nouvelle commande transmise par un technicien de diagnostic.  
-Notre système enverra une requête **POST** à ce webhook sur votre serveur chaque fois qu'une nouvelle commande est passée.
+**`GET /api/labs/orders/open`**
 
-### Corps de la requête
+Cet endpoint permet de récupérer toutes les commandes en attente.
+
+### Exemple de réponse
 
 ```typescript
 {
@@ -15,10 +20,10 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
   status: string; // Statut actuel de la commande (voir section "Statuts disponibles")
 
   count: number; // Nombre d'échantillons à analyser
-  sent_at: string; // Date d'envoi du colis (format ISO 8601)
+  sent_at: string; // Date d’envoi du colis (format ISO 8601)
   parcel_id: string; // Numéro de tracking renseigné par le technicien
   url_tracker: string; // URL du service de suivi logistique
-  logistic_company: string; // Nom de l'entreprise de transport utilisée
+  logistic_company: string; // Nom de l’entreprise de transport utilisée
 
   received_at: string | null; // Date de réception par le laboratoire
   received_by: string | null; // Identifiant ou nom de la personne ayant confirmé la réception
@@ -26,11 +31,11 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
   lost_reason: string | null; // Raison de la perte, si applicable
   lost_by: string | null; // Identifiant ou nom de la personne ayant signalé la perte
 
-  analysis_started_at: string | null; // Date de début d'analyse
-  analysis_started_by: string | null; // Utilisateur ayant lancé l'analyse
+  analysis_started_at: string | null; // Date de début d’analyse
+  analysis_started_by: string | null; // Utilisateur ayant lancé l’analyse
 
-  analysis_finalized_at: string | null; // Date de fin d'analyse
-  analysis_finalized_by: string | null; // Utilisateur ayant terminé l'analyse
+  analysis_finalized_at: string | null; // Date de fin d’analyse
+  analysis_finalized_by: string | null; // Utilisateur ayant terminé l’analyse
 
   result_document: string | null; // URL ou identifiant du rapport PDF final
   results_available_at: string | null; // Date à laquelle les résultats sont disponibles
@@ -47,7 +52,7 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
     id: string; // Identifiant unique du laboratoire
     name: string; // Nom commercial du laboratoire
     admin: {
-      legal_name: string; // Nom légal de l'entreprise
+      legal_name: string; // Nom légal de l’entreprise
       vat_number?: string; // Numéro de TVA (optionnel)
       fiscal_number?: string; // Numéro fiscal (optionnel)
     };
@@ -69,11 +74,11 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
   };
 
   lab_address: {
-    id: string; // Identifiant unique de l'adresse du labo
-    name: string; // Nom du site ou de l'établissement
+    id: string; // Identifiant unique de l’adresse du labo
+    name: string; // Nom du site ou de l’établissement
     address: {
-      first_line: string; // Ligne d'adresse principale
-      second_line: string; // Ligne d'adresse complémentaire
+      first_line: string; // Ligne d’adresse principale
+      second_line: string; // Ligne d’adresse complémentaire
       post_code: string; // Code postal
       city: string; // Ville
       country: string; // Pays (ISO 3166-1 alpha-2)
@@ -93,7 +98,7 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
     language: string; // Langue utilisée (fr, en, de, it)
     title: string; // Titre professionnel
     organization: {
-      name: string; // Nom de l'organisation ou entreprise
+      name: string; // Nom de l’organisation ou entreprise
       address: {
         first_line: string;
         second_line: string;
@@ -124,13 +129,13 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
   };
 
   samples_data: {
-    id: string; // Identifiant unique de l'échantillon
+    id: string; // Identifiant unique de l’échantillon
     qr: {
-      id: string; // Nom visible de l'échantillon
+      id: string; // Nom visible de l’échantillon (ex: code sur le sachet)
       date: string; // Date du prélèvement ou du scan
       location: {
-        lat: number;
-        long: number;
+        lat: number; // Latitude du prélèvement
+        long: number; // Longitude du prélèvement
       };
     };
     pollutant_tested: string; // Clé du polluant testé (selon référentiel PolluScan)
@@ -138,6 +143,3 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
   }[];
 }[]
 ```
-1. [Configuration](./setup.md)
-3. [Réponse](./responce.md)
-3. [Support](../support.md)

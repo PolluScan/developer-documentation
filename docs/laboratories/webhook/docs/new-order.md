@@ -1,10 +1,17 @@
-### Lister toutes les commandes ouvertes
+---
+title: Nouvelle commande
+parent: Webhooks Laboratoires
+nav_order: 2
+---
 
-**`GET /api/labs/orders/open`**
+## Réception d'une nouvelle commande
 
-Cet endpoint permet de récupérer toutes les commandes en attente.
+**`POST your_endpoint`**
 
-#### Exemple de réponse
+Cet endpoint est utilisé pour recevoir une nouvelle commande transmise par un technicien de diagnostic.  
+Notre système enverra une requête **POST** à ce webhook sur votre serveur chaque fois qu'une nouvelle commande est passée.
+
+### Corps de la requête
 
 ```typescript
 {
@@ -14,10 +21,10 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
   status: string; // Statut actuel de la commande (voir section "Statuts disponibles")
 
   count: number; // Nombre d'échantillons à analyser
-  sent_at: string; // Date d’envoi du colis (format ISO 8601)
+  sent_at: string; // Date d'envoi du colis (format ISO 8601)
   parcel_id: string; // Numéro de tracking renseigné par le technicien
   url_tracker: string; // URL du service de suivi logistique
-  logistic_company: string; // Nom de l’entreprise de transport utilisée
+  logistic_company: string; // Nom de l'entreprise de transport utilisée
 
   received_at: string | null; // Date de réception par le laboratoire
   received_by: string | null; // Identifiant ou nom de la personne ayant confirmé la réception
@@ -25,11 +32,11 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
   lost_reason: string | null; // Raison de la perte, si applicable
   lost_by: string | null; // Identifiant ou nom de la personne ayant signalé la perte
 
-  analysis_started_at: string | null; // Date de début d’analyse
-  analysis_started_by: string | null; // Utilisateur ayant lancé l’analyse
+  analysis_started_at: string | null; // Date de début d'analyse
+  analysis_started_by: string | null; // Utilisateur ayant lancé l'analyse
 
-  analysis_finalized_at: string | null; // Date de fin d’analyse
-  analysis_finalized_by: string | null; // Utilisateur ayant terminé l’analyse
+  analysis_finalized_at: string | null; // Date de fin d'analyse
+  analysis_finalized_by: string | null; // Utilisateur ayant terminé l'analyse
 
   result_document: string | null; // URL ou identifiant du rapport PDF final
   results_available_at: string | null; // Date à laquelle les résultats sont disponibles
@@ -46,7 +53,7 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
     id: string; // Identifiant unique du laboratoire
     name: string; // Nom commercial du laboratoire
     admin: {
-      legal_name: string; // Nom légal de l’entreprise
+      legal_name: string; // Nom légal de l'entreprise
       vat_number?: string; // Numéro de TVA (optionnel)
       fiscal_number?: string; // Numéro fiscal (optionnel)
     };
@@ -68,11 +75,11 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
   };
 
   lab_address: {
-    id: string; // Identifiant unique de l’adresse du labo
-    name: string; // Nom du site ou de l’établissement
+    id: string; // Identifiant unique de l'adresse du labo
+    name: string; // Nom du site ou de l'établissement
     address: {
-      first_line: string; // Ligne d’adresse principale
-      second_line: string; // Ligne d’adresse complémentaire
+      first_line: string; // Ligne d'adresse principale
+      second_line: string; // Ligne d'adresse complémentaire
       post_code: string; // Code postal
       city: string; // Ville
       country: string; // Pays (ISO 3166-1 alpha-2)
@@ -92,7 +99,7 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
     language: string; // Langue utilisée (fr, en, de, it)
     title: string; // Titre professionnel
     organization: {
-      name: string; // Nom de l’organisation ou entreprise
+      name: string; // Nom de l'organisation ou entreprise
       address: {
         first_line: string;
         second_line: string;
@@ -123,13 +130,13 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
   };
 
   samples_data: {
-    id: string; // Identifiant unique de l’échantillon
+    id: string; // Identifiant unique de l'échantillon
     qr: {
-      id: string; // Nom visible de l’échantillon (ex: code sur le sachet)
+      id: string; // Nom visible de l'échantillon
       date: string; // Date du prélèvement ou du scan
       location: {
-        lat: number; // Latitude du prélèvement
-        long: number; // Longitude du prélèvement
+        lat: number;
+        long: number;
       };
     };
     pollutant_tested: string; // Clé du polluant testé (selon référentiel PolluScan)
@@ -137,8 +144,20 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
   }[];
 }[]
 ```
-### Index
 
-- [Mettre à jour le statut des commandes](./routes/updateOrderStatus.md)
-- [Soumettre les résultats d'analyse des échantillons](./routes/addAnalysisResults.md)
-- [Téléverser les rapports PDF finaux](./routes/uploadAnalysisReport.md)
+#### Réception
+
+```yaml
+2xx: OK — la commande est marquée comme reçue
+Autres: FAIL
+```
+
+### ⚠️ ATTENTION IMPORTANTE : Gestion des réponses HTTP
+
+En cas d'échec, notre système **réessaiera périodiquement jusqu'à obtenir un code de statut HTTP 2xx**.
+
+#### Instructions CRITIQUES :
+
+1. **Votre endpoint DOIT retourner un code de statut 2xx** pour indiquer que la requête a été traitée avec succès
+2. **Tout autre code de statut** (4xx, 5xx, etc.) sera considéré comme un échec et déclenchera de nouvelles tentatives
+3. **Même une réponse 500 ou 404** entraînera des réessais automatiques
