@@ -5,7 +5,7 @@ favicon_ico: "/assets/images/favicon.ico"
 email: mikael@polluscan.ch
 description: >- # this means to ignore newlines until "baseurl:"
   Developer Documentation
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/developer-documentation" # the subpath of your site, e.g. /blog
 url: "https://polluscan.ch" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: polluscan
 github_username:  polluscan
