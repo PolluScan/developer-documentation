@@ -8,7 +8,7 @@ nav_order: 1
 
 ### Accéder à l'espace développeur
 
-1. Connectez-vous à votre compte PolluScan sur https://admin.polluscan.ch
+1. Connectez-vous à votre compte PolluScan sur <a href="https://admin.polluscan.ch" target="_blank">admin.polluscan.ch</a>
 2. Dans le menu principal, rendez-vous sur la page /developer
 3. Cliquez sur Créer une clé API
 
