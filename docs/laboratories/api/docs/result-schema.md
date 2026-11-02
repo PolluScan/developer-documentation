@@ -108,9 +108,9 @@ Le laboratoire livre des valeurs, pas de verdict. Seul le booléen `asbestosDete
 
 - La **première livraison** de résultats pour une commande est validée contre le schéma courant du service, qui est alors copié sur la commande.
 - Les **livraisons suivantes** pour cette commande sont validées contre cette copie, même si le schéma du service a été modifié entre-temps. Les nouvelles commandes utilisent le schéma courant.
-- `resultSchemaHash` identifie la version attendue : empreinte SHA-256 (hexadécimal) du schéma copié sur la commande, à défaut du schéma courant du service, `null` si le service n’a pas de schéma. Il est renvoyé pour chaque commande par [Lister toutes les commandes ouvertes]({{ '/docs/laboratories/api/docs/routes/fetch-open-orders.html' | relative_url }}) et dans chaque réponse 422.
+- `resultSchemaHash` identifie la version attendue : empreinte SHA-256 (hexadécimal) du JSON canonique du schéma copié sur la commande, à défaut du schéma courant du service, `null` si le service n’a pas de schéma. JSON canonique : clés d’objet triées récursivement, sans espaces. Il est renvoyé pour chaque commande par [Lister toutes les commandes ouvertes]({{ '/docs/laboratories/api/docs/routes/fetch-open-orders.html' | relative_url }}) et dans chaque réponse 422.
 
-Traitez `resultSchemaHash` comme un identifiant opaque : comparez-le à la version de schéma que votre système produit pour savoir contre quel schéma une commande ouverte sera validée.
+Traitez `resultSchemaHash` comme un identifiant opaque : comparez-le à l’empreinte du schéma que votre système produit (même recette) pour savoir contre quel schéma une commande ouverte sera validée.
 
 ### Schémas de référence
 

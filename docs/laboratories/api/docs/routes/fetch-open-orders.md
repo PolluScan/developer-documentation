@@ -10,7 +10,7 @@ nav_order: 4
 
 Cet endpoint permet de récupérer toutes les commandes en attente.
 
-Chaque commande porte `resultSchemaHash` : l’empreinte SHA-256 du schéma de résultat contre lequel ses résultats seront validés (copie faite à la première livraison, à défaut schéma courant du service ; `null` si le service n’a pas de schéma). Voir [Schéma de résultat]({{ '/docs/laboratories/api/docs/result-schema.html' | relative_url }}#versionnement).
+Chaque commande porte `resultSchemaHash` : l’empreinte SHA-256 (hexadécimal) du JSON canonique, clés triées récursivement et sans espaces, du schéma de résultat contre lequel ses résultats seront validés (copie faite à la première livraison, à défaut schéma courant du service ; `null` si le service n’a pas de schéma). Voir [Schéma de résultat]({{ '/docs/laboratories/api/docs/result-schema.html' | relative_url }}#versionnement).
 
 ### Exemple de réponse
 

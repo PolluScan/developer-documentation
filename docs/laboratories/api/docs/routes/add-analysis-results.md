@@ -31,8 +31,8 @@ Permet de soumettre les résultats d’analyse des échantillons d’une command
 
 - `results` : un élément par échantillon analysé. L’objet `result` est validé contre le schéma de résultat du service (voir [Schéma de résultat]({{ '/docs/laboratories/api/docs/result-schema.html' | relative_url }})).
 - `notAnalysed` : échantillons que le laboratoire n’a pas pu analyser (matière insuffisante, échantillon que le service ne peut pas traiter, etc.). Ces échantillons passent au statut perdu et sont affichés « Non analysé · raison » au diagnostiqueur.
-- Chaque `sampleId` doit appartenir à la commande `{orderId}`.
-- Les résultats peuvent être livrés en plusieurs envois tant que la commande n’est pas au statut `results_available`. Chaque échantillon ne doit être livré qu’une seule fois.
+- Chaque `sampleId` doit appartenir à la commande `{orderId}` et n’apparaître qu’une seule fois dans l’envoi (dans `results` ou dans `notAnalysed`, pas les deux).
+- Les résultats peuvent être livrés en plusieurs envois tant que la commande n’est pas au statut `results_available`. Un échantillon peut être livré à nouveau : le nouveau résultat remplace le précédent (le plus récent fait foi). À partir de `results_available`, tout envoi est refusé (`409 ERROR_PARCEL_RESULTS_LOCKED`).
 - La validation porte sur l’envoi entier : **si un seul échantillon est en erreur, rien n’est enregistré**. Corrigez et renvoyez l’envoi complet.
 
 Le laboratoire ne pose pas de verdict positif / négatif : il livre des valeurs, le diagnostiqueur valide chaque échantillon. Seul le champ `asbestosDetected` (amiante dans les matériaux) est repris comme estimation du laboratoire.
@@ -99,7 +99,21 @@ Un ou plusieurs résultats ne respectent pas le schéma attendu. Les erreurs son
 }
 ```
 
-Le même code 422 est renvoyé avec `"message": "ERROR_SAMPLE_NOT_IN_ORDER"` lorsqu’un `sampleId` n’appartient pas à la commande ; `errors` liste alors les identifiants concernés.
+Le même code 422 est renvoyé avec `"message": "ERROR_SAMPLE_NOT_IN_ORDER"` lorsqu’un `sampleId` n’appartient pas à la commande (`"not in this order"`) ou apparaît plusieurs fois dans le même envoi, y compris dans `results` et `notAnalysed` à la fois (`"delivered twice"`) :
+
+```json
+{
+  "statusCode": 422,
+  "message": "ERROR_SAMPLE_NOT_IN_ORDER",
+  "resultSchemaHash": "5f0c3e9a2b7d41c8e6a09f3b5d7e1c2a4b6d8f0e1a3c5e7b9d2f4a6c8e0b1d3f",
+  "errors": [
+    {
+      "sampleId": "8a1d4e2c-9b3f-4c7a-a5e1-6d0f2b8c3e71",
+      "errors": [{ "instancePath": "", "message": "delivered twice" }]
+    }
+  ]
+}
+```
 
 ### Exemple avec un échantillon non analysé
 
