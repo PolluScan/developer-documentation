@@ -11,6 +11,8 @@ nav_order: 2
 Cet endpoint est utilisé pour recevoir une nouvelle commande transmise par un technicien de diagnostic.  
 Notre système enverra une requête **POST** à ce webhook sur votre serveur chaque fois qu'une nouvelle commande est passée.
 
+Le champ `lab_service.slug` identifie le service commandé : c'est son [schéma de résultat]({{ '/docs/laboratories/api/docs/result-schema.html' | relative_url }}) qui s'applique aux résultats de la commande.
+
 ### Corps de la requête
 
 ```typescript
@@ -61,6 +63,7 @@ Notre système enverra une requête **POST** à ce webhook sur votre serveur cha
 
   lab_service: {
     id: string; // Identifiant unique du service demandé
+    slug: string; // Identifiant du service (ex: "heavy-metals") : son schéma de résultat s'applique aux résultats de la commande
     name: {
       lang: string; // Code langue (fr, en, de, it)
       text: string; // Nom du service
