@@ -73,14 +73,25 @@ Tous optionnels ; en leur absence, la valeur de repli s’applique.
 | ------------- | --------- | ----------------------------------------------------------------------------- | ----------------------------------------------- |
 | `x-label`     | propriété | Libellé : objet `{fr, en, de, it}` ou simple chaîne                           | `title`, puis la clé rendue lisible             |
 | `x-unit`      | propriété | Unité affichée après la valeur                                                | aucune                                          |
-| `x-headline`  | propriété | Valeur affichée sur la ligne repliée de l’échantillon (3 au maximum)          | les 3 premières valeurs mesurées non nulles     |
+| `x-headline`  | propriété | Valeur affichée sur la ligne repliée de l’échantillon (3 au maximum) ; omise quand elle vaut `null` | les 3 premières valeurs mesurées non nulles     |
+| `x-order`     | propriété | Rang d’affichage (nombre, croissant) ; prime sur l’ordre de `required`        | position dans `required`, puis ordre des clés   |
 | `x-loq-of`    | propriété | Cette propriété est la limite de quantification de `<clé>` (si elle ne s’appelle pas `<clé>Loq`) | convention de nommage `<clé>Loq` |
 | `x-hidden`    | propriété | Jamais affichée (identifiants, `@context`)                                    | les clés préfixées par `@` sont masquées d’office |
-| `description` | propriété | Texte d’aide sous le libellé dans le tableau détaillé                         | aucun                                           |
+| `description` | propriété | Note libre pour les développeurs de l’intégration ; non affichée aux diagnostiqueurs | aucun                                     |
 | `x-analyte`   | propriété | **Réservé**, ignoré pour l’instant                                            |                                                 |
 | `examples`    | racine    | `[payload]` : aperçu et laboratoire de test                                   | **obligatoire**                                 |
 
 `x-analyte` est réservé à un futur rattachement des propriétés à des analytes canoniques (seuils, estimation automatique). Ne l’utilisez pas pour autre chose.
+
+### Ordre d’affichage
+
+PolluScan stocke le schéma en JSONB (PostgreSQL), qui **ne conserve pas l’ordre des clés** de `properties` (il les trie par longueur). L’ordre d’affichage se déduit donc, par priorité :
+
+1. `x-order` sur chaque propriété (nombre, croissant) ;
+2. la position de la propriété dans le tableau `required` de son objet (les tableaux gardent leur ordre) ;
+3. l’ordre des clés tel que lu, pour les propriétés restantes, en dernier.
+
+Listez donc dans `required` les propriétés dans l’ordre où elles doivent apparaître : le verdict avant le détail, par exemple `asbestosDetected` avant `contaminantType`. Les objets imbriqués suivent la même règle avec leur propre `required`.
 
 ### Conventions
 
