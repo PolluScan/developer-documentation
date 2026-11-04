@@ -10,6 +10,8 @@ nav_order: 4
 
 Cet endpoint permet de récupérer toutes les commandes en attente.
 
+Chaque commande porte `resultSchemaHash` : l’empreinte SHA-256 (hexadécimal) du JSON canonique, clés triées récursivement et sans espaces, du schéma de résultat contre lequel ses résultats seront validés (copie faite à la première livraison, à défaut schéma courant du service ; `null` si le service n’a pas de schéma). Voir [Schéma de résultat]({{ '/docs/laboratories/api/docs/result-schema.html' | relative_url }}#versionnement).
+
 ### Exemple de réponse
 
 ```typescript
@@ -43,6 +45,8 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
   results_confirmed_at: string | null; // Date de confirmation des résultats
   results_confirmed_by: string | null; // Utilisateur ayant confirmé les résultats
 
+  resultSchemaHash: string | null; // Version du schéma de résultat attendue pour cette commande (voir "Schéma de résultat")
+
   diagnostic: {
     identifier: string; // Identifiant unique du diagnostic
     name: string; // Nom du diagnostic
@@ -60,6 +64,7 @@ Cet endpoint permet de récupérer toutes les commandes en attente.
 
   lab_service: {
     id: string; // Identifiant unique du service demandé
+    slug: string; // Identifiant du service (ex: "heavy-metals") : son schéma de résultat s'applique aux résultats de la commande
     name: {
       lang: string; // Code langue (fr, en, de, it)
       text: string; // Nom du service
